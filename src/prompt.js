@@ -1,0 +1,1 @@
+result = prompt("Test", ["test"]);
