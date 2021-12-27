@@ -1,3 +1,7 @@
+/*
+Make a simple bar chart with external data.
+*/
+
 let height = 100;
 let marginY = 10;
 let partHeight = height + marginY;
