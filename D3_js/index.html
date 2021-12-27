@@ -9,7 +9,7 @@ d3.csv("./Korea_DustData_20211130_3.csv").then(function(data){
   data.sort((a, b) => (a.ACOSD - b.ACOSD));
   let title = d3.keys(data[0]);
   title.splice(title.indexOf("Time"), title.indexOf("Time"));
-  data.forEach((d) => {d.Date = d.Date + " " + d.Time});
+  data.forEach((d) => {d.Date = d.Date + " | " + d.Time});
   // console.log(typeof data);
   let table = d3.select('body').append('table').attr("class", "table table-striped");
   let thead = table.append('thead').attr("class", "table table-light");
@@ -19,7 +19,9 @@ d3.csv("./Korea_DustData_20211130_3.csv").then(function(data){
                     .selectAll('th')
                     .data(title).enter()
                     .append('th')
-                    .text(function (d) {return d;})
+                    .text(function (d) {
+                      return (d == "Date") ? (d + "Time") : d;
+                    });
 
   let rows = tbody.selectAll('tr').data(data)
                   .enter()
