@@ -1,15 +1,16 @@
+<head>
+  <title>D3 Table</title>
+</head>
 <body>
-<!-- <style>
-  .content-table {
-    border-collapse: collapse;
-  }
-</style> -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-
 <script type="text/javascript" src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
 <script type="text/javascript">
 d3.csv("./Korea_DustData_20211130_3.csv").then(function(data){
+  data.sort((a, b) => (a.ACOSD - b.ACOSD));
   let title = d3.keys(data[0]);
+  title.splice(title.indexOf("Time"), title.indexOf("Time"));
+  data.forEach((d) => {d.Date = d.Date + " " + d.Time});
+  // console.log(typeof data);
   let table = d3.select('body').append('table').attr("class", "table table-striped");
   let thead = table.append('thead').attr("class", "table table-light");
   let tbody = table.append('tbody');
@@ -27,11 +28,29 @@ d3.csv("./Korea_DustData_20211130_3.csv").then(function(data){
   let cells = rows.selectAll('td')
     .data(function (d) {
         return title.map(function (title) {
-            return { 'title': title, 'value': d[title]};
+          return { 'title': title, 'value': d[title]};
         });
     }).enter()
     .append('td')
+    .attr("class", (d) => (d.title))
     .text(function (d) { return d.value;});
+
+  let colorByKey = function(key, colorRanges){
+    let valuesFromKey = data.map((value) => (Number(value[key])));
+    let color = d3.scaleLinear()
+      .domain([0
+        , d3.median(valuesFromKey)
+        , d3.max(valuesFromKey)])
+      .range(colorRanges);
+
+    console.log(d3.median(valuesFromKey), d3.max(valuesFromKey))
+    let colors = d3.selectAll(`.${key}`)
+      .style("background-color", function(d) { return color(d.value); })
+  };
+
+  colorByKey("ACOSD", ["green", "yellow", "red"]);
+  colorByKey("Temp", ["green", "yellow", "red"]);
+  colorByKey("Humidity", ["green", "yellow", "red"]);
 });
 </script>
 </body>
