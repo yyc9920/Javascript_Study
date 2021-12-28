@@ -11,8 +11,6 @@ d3.csv("./Korea_DustData_20211130_3.csv").then(function (data) {
         .attr("class", "table table-striped");
 
     let thead = table.append("thead").attr("class", "table table-light");
-    let tbody = table.append("tbody");
-
     let header = thead.append("tr")
         .selectAll("th")
         .data(title)
@@ -21,6 +19,7 @@ d3.csv("./Korea_DustData_20211130_3.csv").then(function (data) {
         .attr("class", d => d + "_")
         .text(d => d == "Date" ? (d + "Time") : d == "ACOSD" ? "" : d );
 
+    let tbody = table.append("tbody");
     let rows = tbody.selectAll("tr").data(data).enter().append("tr");
 
     let cells = rows.selectAll("td")
@@ -41,8 +40,8 @@ d3.csv("./Korea_DustData_20211130_3.csv").then(function (data) {
     };
 
     colorByKey("ACOSD", ["green", "yellow", "red"]);
-    colorByKey("Temp", ["green", "yellow", "red"]);
-    colorByKey("Humidity", ["green", "yellow", "red"]);
+    colorByKey("Temp", ["blue", "white", "red"]);
+    colorByKey("Humidity", ["white", "skyblue", "blue"]);
 
     let hover = d3.select('.ACOSD_')
         .append('div')
