@@ -58,6 +58,8 @@ d3.csv("sample.csv").then((data) => {
     console.log(datas["YechanYun"]);
     console.log(datasets);
 
+    Chart.defaults.global.defaultFontFamily = 'sans-serif';
+    Chart.defaults.global.defaultFontSize = 15;
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'line',
@@ -66,9 +68,15 @@ d3.csv("sample.csv").then((data) => {
             datasets: datasets
         },
         options: {
+            responsive: false,
             tooltips: {
                 mode: 'index',
-                intersect: false
+                intersect: false,
+            },
+            legend: {
+                labels: {
+                    fontSize: 12,
+                }
             }
         }
     });
