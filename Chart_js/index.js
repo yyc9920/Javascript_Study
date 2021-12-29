@@ -3,86 +3,72 @@ d3.csv("sample.csv").then((data) => {
     data.forEach((d) => {
         d.snapshot_created = d.snapshot_created.split(' ')[0];
     });
-    let date;
-    let lastDate;
-    let cnt=0;
-    let labels = new Set();
-    const label_size = 6;
-    data = data.filter((d) => {
-        date = d.snapshot_created;
-        if (date === undefined) {
-            // pass
-        } else if (date !== lastDate) {
-            cnt++;
-        } else {
-            // pass
-        }
-        lastDate = date;
 
-        if (cnt <= label_size) {
-            labels.add(date);
-            return true;
-        } else {
-            return false;
-        }
+    let labels = new Set();
+    let names = new Set();
+    let datasets = [];
+    let datas = {};
+    const label_size = 6;
+    const defaultBorderAlpha = 1;
+    data.forEach((d) => {
+        labels.add(d.snapshot_created);
+        names.add(d.name);
     });
-    labels = [...labels];
+    labels = [...labels].sort().slice(-label_size);
+    names = [...names]
     console.log(labels);
     console.log(data);
+
+    let nested_data = Array.from(d3.group(data, d => d.snapshot_created, d => d.name), ([key, value]) => ({key, value}));
+    console.log(nested_data[0].value.get("YechanYun")[0].count);
+    console.log(nested_data);
+
+    nested_data.forEach((d) => {
+        names.forEach((n) => {
+            // console.log(Object.keys(datas));
+            if (d.value.get(n) === undefined) {
+                if (n in datas) {
+                    datas[n].push(0);
+                } else {
+                    datas[n] = [0];
+                }
+            } else {
+                if (n in datas) {
+                    datas[n].push(+d.value.get(n)[0].count);
+                } else {
+                    datas[n] = [+d.value.get(n)[0].count];
+                }
+            }
+        });
+    });
+
+    Object.keys(datas).forEach((d) => {
+        let r = parseInt(Math.random() * 255);
+        let g = parseInt(Math.random() * 255);
+        let b = parseInt(Math.random() * 255);
+        let color = `rgba(${r}, ${g}, ${b}, ${defaultBorderAlpha})`;
+        let backgroundColor = `rgba(${r}, ${g}, ${b}, ${defaultBorderAlpha/4})`;
+        datasets.push({
+            label: d,
+            data: datas[d],
+            borderColor: color,
+            backgroundColor: backgroundColor,
+        });
+    });
+    console.log(datas["YechanYun"]);
+    console.log(datasets);
+
     const ctx = document.getElementById('myChart').getContext('2d');
-    let defaultBorderAlpha = 1;
     const myChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    `rgba(255, 99, 132, ${defaultBorderAlpha})`,
-                    `rgba(54, 162, 235, ${defaultBorderAlpha})`,
-                    `rgba(255, 206, 86, ${defaultBorderAlpha})`,
-                    `rgba(75, 192, 192, ${defaultBorderAlpha})`,
-                    `rgba(153, 102, 255, ${defaultBorderAlpha})`,
-                    `rgba(255, 159, 64, ${defaultBorderAlpha})`
-                ],
-                borderWidth: 5,
-                hoverBorderWidth: 10,
-                hoverBorderColor :[
-                    `rgba(255, 99, 132, ${defaultBorderAlpha+3})`,
-                    `rgba(54, 162, 235, ${defaultBorderAlpha+3})`,
-                    `rgba(255, 206, 86, ${defaultBorderAlpha+3})`,
-                    `rgba(75, 192, 192, ${defaultBorderAlpha+3})`,
-                    `rgba(153, 102, 255, ${defaultBorderAlpha+3})`,
-                    `rgba(255, 159, 64, ${defaultBorderAlpha+3})`
-                ]
-            }]
+            datasets: datasets
         },
         options: {
             tooltips: {
                 mode: 'index',
                 intersect: false
-            },
-            scales: {
-                yAxes: [{
-                    stacked: true,
-                    ticks: {
-                        beginAtZero: true,
-                        precision: 0,
-                        suggestedMax: 5
-                    }
-                }],
-                y: {
-                    beginAtZero: true
-                }
             }
         }
     });
