@@ -1,0 +1,4 @@
+index,first_name,last_name,snapshot_id,snapshot_created,level,count
+1,Yechan,Yun,11,2021-12-01,High,20
+2,Sujung,Kim,12,2021-12-02,Middle,2
+3,Seongyun,Yoo,13,2021-12-03,Low,17
