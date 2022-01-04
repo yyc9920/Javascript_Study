@@ -1,5 +1,10 @@
 <!-- TOC -->
 
+- [웹 개발의 역사](#%EC%9B%B9-%EA%B0%9C%EB%B0%9C%EC%9D%98-%EC%97%AD%EC%82%AC)
+    - [@80년대](#80%EB%85%84%EB%8C%80)
+    - [@90년대](#90%EB%85%84%EB%8C%80)
+    - [@00년대](#00%EB%85%84%EB%8C%80)
+    - [@10년대](#10%EB%85%84%EB%8C%80)
 - [소개](#%EC%86%8C%EA%B0%9C)
     - [What is Javascript?](#what-is-javascript)
     - [JavaScript 개발환경](#javascript-%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD)
@@ -60,7 +65,46 @@
 
 <!-- /TOC -->
 
-# 0. 소개
+
+# 1. 웹 개발의 역사
+
+## @80년대
+
+- 1989 : 1989년 CERN에 근무하던 영국인 물리학자 [팀 버너스 리](https://en.wikipedia.org/wiki/Tim_Berners-Lee)와 동료들은 여러 연구 자료를 쉽게 검색하기 위해서 프로토콜과 프로그램을 개발했는데, 이것이 월드 와이드 웹이다. <br>AOL(미국의 온라인 사업 관련 회사)은 인스턴트 메신저 채팅 서비스를 시작하고 상징적인 인사로 사용자를 맞이하기 시작한다.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gFBLiHpkcOk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## @90년대
+
+- 1990 : 팀 버너스 리는 스티브 잡스가 세운 NeXT사의 컴퓨터로 웹서버를 돌렸는데, 이 때문에 NeXT 컴퓨터는 세계 최초의 웹서버로 역사에 남게 되었다. 최초의 웹서버로 돌린 페이지는 [http://info.cern.ch](http://info.cern.ch)이고, 전문은 [여기](http://info.cern.ch/hypertext/WWW/TheProject.html)있다.<br>팀 버너스 리가 첫 번째 웹 브라우저인 [WorldWideWeb](http://en.wikipedia.org/wiki/WorldWideWeb)을 개발한다.<br>
+![](https://assets.pewresearch.org/wp-content/uploads/sites/14/2014/03/800px-First_Web_Server-300x225.jpg)
+  > 최초의 웹 서버 NeXT 컴퓨터. “This machine is a server. DO NOT POWER DOWN!” 이라는 경고 문구가 쓰여있다.
+
+- 1993 : CERN은 자사의 월드 와이드 웹 기술을 퍼블릭 도메인에 배치한다.<br>국립 슈퍼컴퓨팅 애플리케이션 센터(NCSA)는 일반 대중에게 인기를 얻은 최초의 웹 브라우저인 모자이크 1.0을 출시한다. <br>Marc Andreessen은 IMG HTML 태그를 제안하여 웹에서 이미지를 표시할 수 있게 한다.
+
+- 1994 : 스탠포드 대학의 대학원생인 제리 양과 데이비드 필로는 Yahoo!를 만든다.<br>Mosaic의 핵심 개발자였던 Marc Andreessen은 Netscape라는 회사를 설립하고 Netscape Naviagator를 출시한다. HTML과 CSS로 이루어진 정적 웹사이트만 구현 가능했다. 시장에서 80%의 점유율.<br>Netscape에서 동적 웹사이트 구현을 위해 브라우저용 스크립트 언어인 LiveScript를 개발.
+
+- 1995 : Amazon.com은 "지구에서 가장 큰 서점"으로 스스로를 광고하면서 사업을 시작한다. <br>Java의 인기를 의식하여 LiveScript를 JavaScript로 이름을 바꾼다. <br>마이크로소프트는 윈도우 95와 첫 번째 버전의 인터넷 익스플로러(Netscape Navigator를 Reverse-Engineering하여 개발)를 출시한다. JScript라는 스크립트 언어 엔진을 탑재.
+
+- 1996 : 노키아는 인터넷 기능을 갖춘 최초의 휴대폰인 노키아 9000 Communicator를 출시한다.
+
+- 1997 : Google.com이 도메인으로 등록된다. <br>Javascript의 언어 명세서인 첫 번째 ECMAScript1 명세가 정의됨.
+
+## @00년대
+
+- 2000 : Internet Explorer의 시장 점유율 95%.
+
+- 2004 : Mozilla Firefox 브라우저 출시. ActionScript라는 언어를 해석할 수 있는 Tamarin이라는 엔진을 탑재하여 출시함.<br>[AJAX(Asynchronous Javascript and XML)](https://developer.mozilla.org/ko/docs/Web/Guide/AJAX/Getting_Started) 도입.
+
+- 2008 : Google의 Chrome 브라우저 출시. JIT(Just In Time) Compilation 엔진 포함. Javascript 실행 속도 대폭 향상.
+
+- 2009 : ECMAScript5 발표.
+
+## @10년대
+
+- 2015 : ECMAScript6(ES6) 발표. 이후 2021.01.04 기준 ECMAScript12까지 발표됨.
+
+
+# 2. 소개
 
 이 문서는 [모던 JavaScript 튜토리얼](https://ko.javascript.info/)의 '코어 자바스크립트' 내용을 바탕으로 작성했습니다.
 
@@ -147,7 +191,7 @@
 
 <div style="page-break-after: always"></div>
 
-# 1. 자바스크립트 기본
+# 3. 자바스크립트 기본
 
 ##  Hello, world!!
 
@@ -778,4 +822,3 @@
 ## if와 '?'를 사용한 조건 처리
 
 ### 'if'문
-  - yechan
