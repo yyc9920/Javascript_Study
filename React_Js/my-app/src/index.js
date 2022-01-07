@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+const squares_size = 19;
+
 function Square(props) {
   return (
     <button className="square" onClick={props.onClick}>
@@ -21,34 +23,34 @@ class Board extends React.Component {
   }
 
   render() {
+    // TODO: modify hard coded squares
+    let squares = [];
+    let boardRows = [];
+    for (let i = 0; i < squares_size; i++) {
+      for (let j = 0; j < squares_size; j++) {
+        squares.push(
+          this.renderSquare(j + squares_size*i)
+        );
+      }
+      boardRows.push(<div className="board-row">{squares}</div>);
+      squares = [];
+    }
+
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {boardRows}
       </div>
     );
   }
 }
 
 class Game extends React.Component {
+  // TODO: modify hard coded squares
   constructor(props) {
     super(props);
     this.state = {
       history: [{
-        squares: Array(9).fill(null),
+        squares: Array(squares_size**2).fill(null),
       }],
       stepNumber: 0,
       location: [],
@@ -88,13 +90,11 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    console.log(location)
-    console.log(history)
     const moves = history.map((step, move) => {
       const desc = move ?
         `Go to move #${move} ${step.squares[location[move - 1]]}
-          (${parseInt(location[move - 1]/3) + 1},
-           ${location[move - 1]%3 + 1})` :
+          (${parseInt(location[move - 1]/squares_size) + 1},
+           ${location[move - 1]%squares_size + 1})` :
         'Go to game start';
       if (move === this.state.stepNumber) {
         return (
@@ -136,22 +136,64 @@ class Game extends React.Component {
 }
 
 function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
+  // TODO: modify hard coded squares
+  const winLength = 5;
+  let lines = [];
+  let vertical= [];
+  let horizontal= [];
+  let diagonal_R= [];
+  let diagonal_L= [];
+  
+  for (let i = 0; i < squares_size; i++) {
+    for (let j = 0; j < squares_size; j++) {
+      for (let k = 0; k < winLength; k++){
+        if (i + k < squares_size) {
+          vertical.push(i + j*squares_size + k);
+          if (j + k < squares_size) {
+            diagonal_R.push(i + j*squares_size + k*(squares_size + 1));
+          }
+        }
+        if (j + k < squares_size) {
+          horizontal.push(i + j*squares_size + k*squares_size);
+          if (i + k >= (winLength - 1)) {
+            diagonal_L.push(i + j*squares_size + k*(squares_size - 1));
+          }
+        }
+      }
+
+      let pushLine = (line) => {
+        if (line.length === winLength) {
+          lines.push(line);
+        }
+      }
+
+      pushLine(vertical);
+      pushLine(horizontal);
+      pushLine(diagonal_R);
+      pushLine(diagonal_L);
+      vertical = [];
+      horizontal = [];
+      diagonal_R = [];
+      diagonal_L = [];
+    }
+  }; 
+
   for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+    let answer = lines[i];
+    let cnt = 0;
+
+    for (let i = 0; i < answer.length; i++) {
+      if (squares[answer[0]] && squares[answer[0]] === squares[answer[i]]) {
+        cnt++;
+      }
+    }
+    
+    console.log(cnt);
+    if (cnt === winLength) {
+      return squares[answer[0]];
     }
   }
+
   return null;
 }
 
