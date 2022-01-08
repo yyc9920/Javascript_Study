@@ -2,20 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-const squares_size = 19;
+const squares_size = 5;
 
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button id={props.id} className="square" onClick={props.onClick}>
       {props.value}
     </button>
   );
 }
 
 class Board extends React.Component {
-  renderSquare(i) {
+  renderSquare(i, key) {
     return (
       <Square
+        key={key}
+        id={key}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
@@ -28,11 +30,13 @@ class Board extends React.Component {
     let boardRows = [];
     for (let i = 0; i < squares_size; i++) {
       for (let j = 0; j < squares_size; j++) {
+        const key = `square${i}_${j}`;
         squares.push(
-          this.renderSquare(j + squares_size*i)
+          this.renderSquare(j + squares_size*i, key)
         );
       }
-      boardRows.push(<div className="board-row">{squares}</div>);
+      const key = `row${i}`;
+      boardRows.push(<div key={key} className="board-row">{squares}</div>);
       squares = [];
     }
 
@@ -188,8 +192,13 @@ function calculateWinner(squares) {
       }
     }
     
-    console.log(cnt);
     if (cnt === winLength) {
+      for (let x = 0; x < winLength; x++) {
+        let r = parseInt(answer[x] / squares_size);
+        let c = answer[x] % squares_size;
+        let boldSquare = document.getElementById(`square${r}_${c}`);
+        boldSquare.style.backgroundColor = "green";
+      }
       return squares[answer[0]];
     }
   }
