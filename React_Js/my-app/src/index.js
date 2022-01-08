@@ -117,7 +117,11 @@ class Game extends React.Component {
     let status;
 
     if (winner) {
-      status = 'Winner: ' + winner;
+      if (winner === "draw") {
+        status = 'Draw!!!';
+      } else {
+        status = 'Winner: ' + winner;
+      }
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
@@ -201,6 +205,11 @@ function calculateWinner(squares) {
       }
       return squares[answer[0]];
     }
+  }
+
+  console.log(squares.filter(n => n).length, squares_size*squares_size);
+  if (squares.filter(n => n).length === squares_size*squares_size) {
+    return "draw";
   }
 
   return null;
