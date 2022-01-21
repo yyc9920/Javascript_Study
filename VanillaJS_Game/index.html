@@ -5,18 +5,50 @@
     <title>Gamedev Canvas Workshop</title>
     <style>
     	* { padding: 0; margin: 0; }
+        h1 {
+            text-align: center;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
     	canvas { background: #eee; display: block; margin: 0 auto; }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 5em;
+        }
+        .btn {
+            width: 120px;
+            height: 30px;
+            font-size: 1rem;
+            margin-top: 1em;
+        }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
+<h1>벽돌 깨기 with Vanilla JavaScript</h1>
 <canvas id="myCanvas" width="480" height="320"></canvas>
+<div class="container">
+    <button class="btn startGameBtn">Start Game</button>
+    <button class="btn resumeGameBtn hidden">Resume Game</button>
+    <button class="btn retryBtn hidden">Retry</button>
+</div>
 
 <script>
 let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d");
+ctx.font = '48px Arial';
+ctx.fillText('Press Start Button', 45, 170);
 
-let intervalId = null;
+let myReq = null;
+
+let startGameBtn = document.querySelector(".startGameBtn");
+let resumeGameBtn = document.querySelector(".resumeGameBtn");
+let retryBtn = document.querySelector(".retryBtn");
 
 let x = canvas.width / 2;
 let y = canvas.height-30;
@@ -129,9 +161,9 @@ function draw() {
     drawPaddle();
     drawScore();
     drawLives();
+
     if(score == brickRowCount*brickColumnCount*10) {
-        alert("YOU WIN, CONGRATULATIONS!");
-        document.location.reload();
+        handleWin();
     }
     collisionDetection();
 
@@ -160,24 +192,67 @@ function draw() {
     if(y + dy > canvas.height-ballRadius) {
         lives--;
         if(!lives) {
-            alert("GAME OVER");
-            document.location.reload(); // Keep play 버튼
+            handleGameOver(myReq);
+            return;
         }
         else {
-            x = canvas.width/2;
-            y = canvas.height-30;
-            dx = 2;
-            dy = -2;
-            paddleX = (canvas.width-paddleWidth)/2;
+            handleDead(myReq);
+            return;
         }
     }
 
     x += dx;
     y += dy;
-    requestAnimationFrame(draw);
+    myReq = requestAnimationFrame(draw);
 }
 
-draw();
+startGameBtn.addEventListener("click", startGame);
+resumeGameBtn.addEventListener("click", resumeGame);
+retryBtn.addEventListener("click", retryGame);
+
+function startGame() {
+    startGameBtn.classList.add("hidden");
+    draw();
+}
+
+function resumeGame() {
+    resumeGameBtn.classList.add("hidden");
+    if (retryBtn.classList.contains("hidden") === false) {
+        retryBtn.classList.add("hidden");
+    }
+    myReq = requestAnimationFrame(draw);
+}
+
+function retryGame() {
+    if (resumeGameBtn.classList.contains("hidden") === false) {
+        resumeGameBtn.classList.add("hidden");
+    }
+    document.location.reload();
+}
+
+function handleDead(req) {
+    alert(`You are dead.\n${lives} lives left.`);
+    x = canvas.width/2;
+    y = canvas.height-30;
+    paddleX = (canvas.width-paddleWidth)/2;
+    resumeGameBtn.classList.remove("hidden");
+    retryBtn.classList.remove("hidden");
+    cancelAnimationFrame(req);
+}
+
+function handleGameOver(req) {
+    cancelAnimationFrame(req);
+    ctx.font = '48px Arial';
+    ctx.fillText('Game Over!!!', 100, 170);
+    retryBtn.classList.remove("hidden");
+}
+
+function handleWin(req) {
+    cancelAnimationFrame(req);
+    ctx.font = '48px Arial';
+    ctx.fillText('You Win!! Congratulations!', 45, 170);
+    retryBtn.classList.remove("hidden");
+}
 
 function collisionDetection() {
     for (let c=0; c<brickColumnCount; c++) {
