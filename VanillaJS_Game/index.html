@@ -142,10 +142,18 @@ function draw() {
     if(y + dy < ballRadius) {
         dy = -dy;
     } else if(y + dy > canvas.height-ballRadius-paddleHeight) {
-        if(x > paddleX && x < paddleX + paddleWidth) {
+        if(x + dx > paddleX && x + dx < paddleX + paddleWidth/2) {
             ballColor = changeBallColor();
-
             dy = -dy;
+            if(dx > 0){
+                dx = -dx;
+            }
+        } else if(x + dx >= paddleX + paddleWidth/2 && x + dx < paddleX + paddleWidth) {
+            ballColor = changeBallColor();
+            dy = -dy;
+            if(dx <= 0){
+                dx = -dx;
+            }
         }
     }
 
@@ -177,8 +185,13 @@ function collisionDetection() {
             let b = bricks[c][r];
             if(b.status == 1) {
                 if (x+ballRadius > b.x && x-ballRadius < b.x+brickWidth && y+ballRadius > b.y && y-ballRadius < b.y+brickHeight) {
+                    if (y+ballRadius > b.y+brickHeight/4 && y-ballRadius < b.y+brickHeight*3/4) {
+                        console.log("side brick collision!");
+                        dx = -dx;
+                    } else {
+                        dy = -dy;
+                    }
                     ballColor = changeBallColor();
-                    dy = -dy;
                     b.status = 0;
                     score += 10;
                 }
@@ -191,7 +204,6 @@ function changeBallColor() {
     let r = parseInt(Math.random()*180);
     let g = parseInt(Math.random()*180);
     let b = parseInt(Math.random()*180);
-    console.log(r, g, b);
     ballColor = `rgb(${r}, ${g}, ${b})`;
 
     return ballColor;
