@@ -77,21 +77,36 @@ function draw() {
     drawPaddle();
 
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
-        let r = parseInt(Math.random()*255);
-        let g = parseInt(Math.random()*255);
-        let b = parseInt(Math.random()*255);
+        let r = parseInt(Math.random()*180);
+        let g = parseInt(Math.random()*180);
+        let b = parseInt(Math.random()*180);
 
         dx = -dx;
         ballColor = `rgb(${r}, ${g}, ${b})`;
     }
 
-    if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
-        let r = parseInt(Math.random()*255);
-        let g = parseInt(Math.random()*255);
-        let b = parseInt(Math.random()*255);
+    if(y + dy < ballRadius) {
+        let r = parseInt(Math.random()*180);
+        let g = parseInt(Math.random()*180);
+        let b = parseInt(Math.random()*180);
+        ballColor = `rgb(${r}, ${g}, ${b})`;
 
         dy = -dy;
-        ballColor = `rgb(${r}, ${g}, ${b})`;
+    } else if(y + dy > canvas.height-ballRadius-paddleHeight) {
+        if(x > paddleX && x < paddleX + paddleWidth) {
+            let r = parseInt(Math.random()*180);
+            let g = parseInt(Math.random()*180);
+            let b = parseInt(Math.random()*180);
+            ballColor = `rgb(${r}, ${g}, ${b})`;
+
+            dy = -dy;
+        }
+    }
+
+    if(y + dy > canvas.height-ballRadius) {
+        alert("GAME OVER");
+        console.log("Reload");
+        location.reload();
     }
 
     x += dx;
