@@ -16,6 +16,8 @@
 let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d");
 
+let intervalId = null;
+
 let x = canvas.width / 2;
 let y = canvas.height-30;
 let ballRadius = 10;
@@ -31,23 +33,58 @@ let paddleX = (canvas.width - paddleWidth)/2;
 let rightPressed = false;
 let leftPressed = false;
 
-document.addEventListener("keydown", (e) => {
-                                if(e.keyCode == 39) {
-                                    rightPressed = true;
-                                }
-                                else if(e.keyCode == 37) {
-                                    leftPressed = true;
-                                }
-                            }, false);
+let brickRowCount = 3;
+let brickColumnCount = 5;
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
+let bricks = [];
+for(let c=0; c<brickColumnCount; c++) {
+    bricks[c] = [];
+    for(let r=0; r<brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 1 };
+    }
+}
 
-document.addEventListener("keyup", (e) => {
-                                if(e.keyCode == 39) {
-                                    rightPressed = false;
-                                }
-                                else if(e.keyCode == 37) {
-                                    leftPressed = false;
-                                }
-                            }, false);
+let keyDownHandler = (e) => {
+    if(e.keyCode == 39) {
+        rightPressed = true;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = true;
+    }
+}
+document.addEventListener("keydown", keyDownHandler, false);
+
+let keyUpHandler = (e) => {
+    if(e.keyCode == 39) {
+        rightPressed = false;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = false;
+    }
+}
+document.addEventListener("keyup", keyUpHandler, false);
+
+function drawBricks() {
+    for(let c=0; c<brickColumnCount; c++) {
+        for(let r=0; r<brickRowCount; r++) {
+            if(bricks[c][r].status == 1) {
+                let brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+                let brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+                bricks[c][r].x = brickX;
+                bricks[c][r].y = brickY;
+                ctx.beginPath();
+                ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+    }
+}
 
 function drawBall() {
     ctx.beginPath();
@@ -74,30 +111,19 @@ function drawPaddle() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
+    drawBricks();
     drawPaddle();
+    collisionDetection();
 
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
-        let r = parseInt(Math.random()*180);
-        let g = parseInt(Math.random()*180);
-        let b = parseInt(Math.random()*180);
-
         dx = -dx;
-        ballColor = `rgb(${r}, ${g}, ${b})`;
     }
 
     if(y + dy < ballRadius) {
-        let r = parseInt(Math.random()*180);
-        let g = parseInt(Math.random()*180);
-        let b = parseInt(Math.random()*180);
-        ballColor = `rgb(${r}, ${g}, ${b})`;
-
         dy = -dy;
     } else if(y + dy > canvas.height-ballRadius-paddleHeight) {
         if(x > paddleX && x < paddleX + paddleWidth) {
-            let r = parseInt(Math.random()*180);
-            let g = parseInt(Math.random()*180);
-            let b = parseInt(Math.random()*180);
-            ballColor = `rgb(${r}, ${g}, ${b})`;
+            ballColor = changeBallColor();
 
             dy = -dy;
         }
@@ -105,15 +131,39 @@ function draw() {
 
     if(y + dy > canvas.height-ballRadius) {
         alert("GAME OVER");
-        console.log("Reload");
-        location.reload();
+        clearInterval(intervalId);
     }
 
     x += dx;
     y += dy;
 }
 
-setInterval(draw, 10);
+function collisionDetection() {
+    for (let c=0; c<brickColumnCount; c++) {
+        for (let r=0; r<brickRowCount; r++) {
+            let b = bricks[c][r];
+            if(b.status == 1) {
+                if (x+ballRadius > b.x && x-ballRadius < b.x+brickWidth && y+ballRadius > b.y && y-ballRadius < b.y+brickHeight) {
+                    ballColor = changeBallColor();
+                    dy = -dy;
+                    b.status = 0;
+                }
+            }
+        }
+    }
+}
+
+function changeBallColor() {
+    let r = parseInt(Math.random()*180);
+    let g = parseInt(Math.random()*180);
+    let b = parseInt(Math.random()*180);
+    console.log(r, g, b);
+    ballColor = `rgb(${r}, ${g}, ${b})`;
+
+    return ballColor;
+}
+
+intervalId = setInterval(draw, 10);
 </script>
 
 </body>
