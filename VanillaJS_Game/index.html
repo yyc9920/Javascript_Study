@@ -163,7 +163,8 @@ function draw() {
     drawLives();
 
     if(score == brickRowCount*brickColumnCount*10) {
-        handleWin();
+        handleWin(myReq);
+        return;
     }
     collisionDetection();
 
@@ -173,20 +174,12 @@ function draw() {
 
     if(y + dy < ballRadius) {
         dy = -dy;
-    } else if(y + dy > canvas.height-ballRadius-paddleHeight) {
-        if(x + dx > paddleX && x + dx < paddleX + paddleWidth/2) {
-            ballColor = changeBallColor();
-            dy = -dy;
-            if(dx > 0){
-                dx = -dx;
-            }
-        } else if(x + dx >= paddleX + paddleWidth/2 && x + dx < paddleX + paddleWidth) {
-            ballColor = changeBallColor();
-            dy = -dy;
-            if(dx <= 0){
-                dx = -dx;
-            }
-        }
+    } else if(y + dy > canvas.height-ballRadius-paddleHeight
+                && x + dx > paddleX
+                && x + dx < paddleX + paddleWidth) {
+        ballColor = changeBallColor();
+        dy = -dy;
+        dx = calculateBallDirection(x+dx, paddleX)
     }
 
     if(y + dy > canvas.height-ballRadius) {
@@ -204,6 +197,12 @@ function draw() {
     x += dx;
     y += dy;
     myReq = requestAnimationFrame(draw);
+}
+
+function calculateBallDirection(ballPos, paddlePos) {
+    foo = -(paddlePos - ballPos + paddleWidth/2);
+    console.log(foo);
+    return foo/10;
 }
 
 startGameBtn.addEventListener("click", startGame);
@@ -250,7 +249,8 @@ function handleGameOver(req) {
 function handleWin(req) {
     cancelAnimationFrame(req);
     ctx.font = '48px Arial';
-    ctx.fillText('You Win!! Congratulations!', 45, 170);
+    ctx.fillText('You Win!!', 45, 120);
+    ctx.fillText('Congratulation!!', 45, 220);
     retryBtn.classList.remove("hidden");
 }
 
