@@ -31,7 +31,7 @@
 <body>
 
 <h1>벽돌 깨기 with Vanilla JavaScript</h1>
-<canvas id="myCanvas" width="480" height="320"></canvas>
+<canvas id="myCanvas" width="900" height="600"></canvas>
 <div class="container">
     <button class="btn startGameBtn">Start Game</button>
     <button class="btn resumeGameBtn hidden">Resume Game</button>
@@ -58,7 +58,7 @@ let score = 0;
 let lives = 3;
 
 let dx = -2.5;
-let dy = -2.5;
+let dy = -5;
 
 let paddleHeight = 10;
 let paddleWidth = 75;
@@ -67,8 +67,8 @@ let paddleX = (canvas.width - paddleWidth)/2;
 let rightPressed = false;
 let leftPressed = false;
 
-let brickRowCount = 3;
-let brickColumnCount = 5;
+let brickRowCount = 10;
+let brickColumnCount = 10;
 let brickWidth = 75;
 let brickHeight = 20;
 let brickPadding = 10;
