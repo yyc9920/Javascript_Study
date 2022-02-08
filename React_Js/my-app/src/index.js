@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-const squares_size = 5;
+const squares_size = 10;
 
 function Square(props) {
   return (
